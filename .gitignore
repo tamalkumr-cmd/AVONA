@@ -1,0 +1,12 @@
+﻿venv/
+.venv/
+__pycache__/
+*.gguf
+*.safetensors
+*.bin
+*.pt
+*.pth
+smollm2_360m_merged/
+my_finetuned_slm/checkpoint-*/
+llama.cpp/
+.env

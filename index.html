@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Local LLM Studio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col items-center p-6">
+  <div class="w-full max-w-3xl flex flex-col h-[90vh] bg-slate-800 rounded-xl border border-slate-700 shadow-2xl overflow-hidden">
+    
+    <!-- Top Bar -->
+    <div class="p-4 border-b border-slate-700 flex justify-between items-center bg-slate-850">
+      <div class="flex items-center space-x-2">
+        <span class="h-3 w-3 rounded-full bg-emerald-500 animate-pulse"></span>
+        <h1 class="font-bold text-lg tracking-wide">Local LLM Studio</h1>
+      </div>
+      
+      <!-- Mode Switcher -->
+      <div class="flex bg-slate-700 rounded-lg p-1 text-sm font-medium">
+        <button id="mode-chat" onclick="setMode('chat')" class="px-3 py-1 rounded-md bg-indigo-600 text-white">Chat</button>
+        <button id="mode-rag" onclick="setMode('rag')" class="px-3 py-1 rounded-md text-slate-300">RAG</button>
+        <button id="mode-agent" onclick="setMode('agent')" class="px-3 py-1 rounded-md text-slate-300">Agent</button>
+      </div>
+    </div>
+
+    <!-- Chat Messages Window -->
+    <div id="messages" class="flex-1 overflow-y-auto p-4 space-y-4">
+      <div class="p-3 bg-slate-700/50 rounded-lg text-slate-400 text-sm">
+        Connected to local FastAPI backend on <code class="text-indigo-400">http://127.0.0.1:8000</code>.
+      </div>
+    </div>
+
+    <!-- Input Bar -->
+    <div class="p-4 border-t border-slate-700 bg-slate-850">
+      <form id="chat-form" onsubmit="handleSubmit(event)" class="flex space-x-2">
+        <input 
+          type="text" 
+          id="user-input" 
+          placeholder="Ask anything or request a tool calculation..." 
+          class="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500 text-white placeholder-slate-500"
+          autocomplete="off"
+        />
+        <button 
+          type="submit" 
+          id="send-btn"
+          class="bg-indigo-600 hover:bg-indigo-500 px-5 py-2.5 rounded-lg text-sm font-medium transition-colors duration-150">
+          Send
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let currentMode = 'chat';
+    const serverUrl = 'http://127.0.0.1:8000';
+
+    function setMode(mode) {
+      currentMode = mode;
+      ['chat', 'rag', 'agent'].forEach(m => {
+        const btn = document.getElementById(`mode-${m}`);
+        if (m === mode) {
+          btn.className = "px-3 py-1 rounded-md bg-indigo-600 text-white";
+        } else {
+          btn.className = "px-3 py-1 rounded-md text-slate-300 hover:text-white";
+        }
+      });
+    }
+
+    function appendMessage(sender, text, sources = null) {
+      const messagesDiv = document.getElementById('messages');
+      const msgWrapper = document.createElement('div');
+      msgWrapper.className = sender === 'user' ? 'flex justify-end' : 'flex justify-start';
+
+      const bubble = document.createElement('div');
+      bubble.className = sender === 'user' 
+        ? 'max-w-[80%] bg-indigo-600 text-white p-3 rounded-2xl rounded-tr-none text-sm'
+        : 'max-w-[80%] bg-slate-700 text-slate-100 p-3 rounded-2xl rounded-tl-none text-sm shadow-md';
+      
+      if (sources && sources.length > 0) {
+        const srcBox = document.createElement('div');
+        srcBox.className = 'mb-2 p-2 bg-slate-800/80 rounded border border-slate-600 text-xs text-slate-300';
+        srcBox.innerHTML = `<strong>📌 Retrieved Source:</strong><br/>${sources.join('<br/>')}`;
+        bubble.appendChild(srcBox);
+      }
+
+      const textNode = document.createElement('div');
+      textNode.className = 'message-content whitespace-pre-wrap';
+      textNode.textContent = text;
+      bubble.appendChild(textNode);
+
+      msgWrapper.appendChild(bubble);
+      messagesDiv.appendChild(msgWrapper);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      return textNode;
+    }
+
+    async function handleSubmit(e) {
+      e.preventDefault();
+      const input = document.getElementById('user-input');
+      const query = input.value.trim();
+      if (!query) return;
+
+      input.value = '';
+      appendMessage('user', query);
+
+      if (currentMode === 'agent') {
+        const botTextElement = appendMessage('bot', 'Thinking & executing tools...');
+        try {
+          const res = await fetch(`${serverUrl}/api/agent`, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({ message: query })
+          });
+          const data = await res.json();
+          let formatted = data.final_answer;
+          if (data.thoughts && data.thoughts.length > 0) {
+            formatted = `[Tool Executed: ${data.thoughts[0].action} -> ${data.thoughts[0].output}]\n\n` + formatted;
+          }
+          botTextElement.textContent = formatted;
+        } catch (err) {
+          botTextElement.textContent = 'Error connecting to server: ' + err.message;
+        }
+        return;
+      }
+
+      // Streaming Handler for Chat & RAG
+      const endpoint = currentMode === 'rag' ? '/api/rag' : '/api/chat';
+      let botTextElement = null;
+      let isFirstToken = true;
+
+      try {
+        const response = await fetch(`${serverUrl}${endpoint}`, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ message: query })
+        });
+
+        const reader = response.body.getReader();
+        const decoder = new TextDecoder();
+        let buffer = '';
+
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+
+          buffer += decoder.decode(value, { stream: true });
+          const lines = buffer.split('\n');
+          buffer = lines.pop(); // Keep incomplete line
+
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              const payload = JSON.parse(line.slice(6));
+              
+              if (payload.sources) {
+                botTextElement = appendMessage('bot', '', payload.sources);
+              } else if (payload.token) {
+                if (!botTextElement) {
+                  botTextElement = appendMessage('bot', '');
+                }
+                botTextElement.textContent += payload.token;
+                document.getElementById('messages').scrollTop = document.getElementById('messages').scrollHeight;
+              }
+            }
+          }
+        }
+      } catch (err) {
+        if (!botTextElement) botTextElement = appendMessage('bot', '');
+        botTextElement.textContent += '\n[Stream Error: ' + err.message + ']';
+      }
+    }
+  </script>
+</body>
+</html>
