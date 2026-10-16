@@ -1,6 +1,4 @@
-Here is the updated, complete **`README.md`** file re-branded to **AVNONA**:
 
-```markdown
 # AVNONA: Autonomous Local AI Coding & Self-Healing Agent
 
 > An ultra-lightweight, offline autonomous coding agent built for consumer hardware. Powered by a custom QLoRA fine-tuned 360M parameter model with local tool execution, compiler self-healing, and a unified desktop GUI.
