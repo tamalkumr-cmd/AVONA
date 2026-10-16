@@ -195,6 +195,6 @@ pyinstaller --noconfirm build_app.spec
 
 ```
 
-<FollowUp label="Want to add a section with screenshot placeholders or licensing key setup instructions?" query="Add a Licensing Setup and Screenshots section to the README.md file."/>
+
 
 ```
