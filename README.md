@@ -1,5 +1,5 @@
 
-# KACHOW: Autonomous Local AI Coding & Self-Healing Agent
+# AVONA: Autonomous Local AI Coding & Self-Healing Agent
 
 > An ultra-lightweight, offline autonomous coding agent built for consumer hardware. Powered by a custom QLoRA fine-tuned 360M parameter model with local tool execution, compiler self-healing, and a unified desktop GUI.
 
@@ -7,7 +7,7 @@
 
 ## Overview
 
-**KACHOW** is a self-contained, offline desktop AI coding assistant engineered to run entirely on low-VRAM edge GPUs. By fine-tuning `SmolLM2-360M-Instruct` on a multi-domain dataset using 4-bit quantization and response-only loss masking, KACHOW delivers fast, deterministic JSON tool dispatch, multi-step math reasoning, and local code compilation without relying on third-party cloud APIs.
+**AVONA** is a self-contained, offline desktop AI coding assistant engineered to run entirely on low-VRAM edge GPUs. By fine-tuning `SmolLM2-360M-Instruct` on a multi-domain dataset using 4-bit quantization and response-only loss masking, KACHOW delivers fast, deterministic JSON tool dispatch, multi-step math reasoning, and local code compilation without relying on third-party cloud APIs.
 
 ---
 
