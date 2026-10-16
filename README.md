@@ -1,5 +1,5 @@
 
-# AVNONA: Autonomous Local AI Coding & Self-Healing Agent
+# AVONA: Autonomous Local AI Coding & Self-Healing Agent
 
 > An ultra-lightweight, offline autonomous coding agent built for consumer hardware. Powered by a custom QLoRA fine-tuned 360M parameter model with local tool execution, compiler self-healing, and a unified desktop GUI.
 
@@ -7,7 +7,7 @@
 
 ## Overview
 
-**AVNONA** is a self-contained, offline desktop AI coding assistant engineered to run entirely on low-VRAM edge GPUs. By fine-tuning `SmolLM2-360M-Instruct` on a multi-domain dataset using 4-bit quantization and response-only loss masking, AVNONA delivers fast, deterministic JSON tool dispatch, multi-step math reasoning, and local code compilation without relying on third-party cloud APIs.
+**AVONA** is a self-contained, offline desktop AI coding assistant engineered to run entirely on low-VRAM edge GPUs. By fine-tuning `SmolLM2-360M-Instruct` on a multi-domain dataset using 4-bit quantization and response-only loss masking, AVONA delivers fast, deterministic JSON tool dispatch, multi-step math reasoning, and local code compilation without relying on third-party cloud APIs.
 
 ---
 
@@ -76,7 +76,7 @@
 
 ```
 
-avnona-agent/
+avona-agent/
 ├── agent_adapter/          # Fine-tuned QLoRA weights & adapter config
 ├── data/
 │   └── master_train.jsonl   # 6k multi-domain SFT dataset
@@ -141,7 +141,7 @@ pip install -r requirements.txt
 
 ### Running the Desktop GUI App
 
-To launch the full AVNONA desktop application (FastAPI backend + PyWebview UI):
+To launch the full AVONA desktop application (FastAPI backend + PyWebview UI):
 
 ```powershell
 python main_app.py
@@ -159,7 +159,7 @@ python run_agent.py
 
 ### Example Verification Prompt
 
-Try prompting AVNONA with a deliberate compiler bug to verify self-healing:
+Try prompting AVONA with a deliberate compiler bug to verify self-healing:
 
 > *"Write a C++ program in `calc.cpp` that calculates the factorial of 10. Deliberately omit `#include <iostream>`, compile it, catch the error, fix the include, and run it."*
 
@@ -167,7 +167,7 @@ Try prompting AVNONA with a deliberate compiler bug to verify self-healing:
 
 ## Packaging into Standalone `.exe`
 
-To package AVNONA into an executable for Windows distribution:
+To package AVONA into an executable for Windows distribution:
 
 1. **Install PyInstaller:**
 ```powershell
@@ -183,7 +183,7 @@ pyinstaller --noconfirm build_app.spec
 ```
 
 
-3. Find the compiled output folder at `dist/AVNONA/` and launch **`AVNONA.exe`**.
+3. Find the compiled output folder at `dist/AVONA/` and launch **`AVONA.exe`**.
 
 ---
 
