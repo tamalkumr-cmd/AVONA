@@ -1,5 +1,7 @@
+Here is the updated, complete **`README.md`** file re-branded to **AVNONA**:
 
-# AVONA: Autonomous Local AI Coding & Self-Healing Agent
+```markdown
+# AVNONA: Autonomous Local AI Coding & Self-Healing Agent
 
 > An ultra-lightweight, offline autonomous coding agent built for consumer hardware. Powered by a custom QLoRA fine-tuned 360M parameter model with local tool execution, compiler self-healing, and a unified desktop GUI.
 
@@ -7,7 +9,7 @@
 
 ## Overview
 
-**AVONA** is a self-contained, offline desktop AI coding assistant engineered to run entirely on low-VRAM edge GPUs. By fine-tuning `SmolLM2-360M-Instruct` on a multi-domain dataset using 4-bit quantization and response-only loss masking, KACHOW delivers fast, deterministic JSON tool dispatch, multi-step math reasoning, and local code compilation without relying on third-party cloud APIs.
+**AVNONA** is a self-contained, offline desktop AI coding assistant engineered to run entirely on low-VRAM edge GPUs. By fine-tuning `SmolLM2-360M-Instruct` on a multi-domain dataset using 4-bit quantization and response-only loss masking, AVNONA delivers fast, deterministic JSON tool dispatch, multi-step math reasoning, and local code compilation without relying on third-party cloud APIs.
 
 ---
 
@@ -65,7 +67,7 @@
 ▼
 ┌─────────────────────────────────────────────────────────────┐
 │                  Verified Execution Output                  │
-└─────────────────────────────────────────────────────────────┘
+└──────────────────────────────┴──────────────────────────────┘
 
 ```
 
@@ -76,7 +78,7 @@
 
 ```
 
-kachow-agent/
+avnona-agent/
 ├── agent_adapter/          # Fine-tuned QLoRA weights & adapter config
 ├── data/
 │   └── master_train.jsonl   # 6k multi-domain SFT dataset
@@ -107,8 +109,8 @@ kachow-agent/
 
 1. **Clone the repository:**
    ```powershell
-   git clone [https://github.com/your-username/kachow-agent.git](https://github.com/your-username/kachow-agent.git)
-   cd kachow-agent
+   git clone [https://github.com/tamalkumr-cmd/KACHOW-LLM.git](https://github.com/tamalkumr-cmd/KACHOW-LLM.git)
+   cd KACHOW-LLM
 
 ```
 
@@ -141,7 +143,7 @@ pip install -r requirements.txt
 
 ### Running the Desktop GUI App
 
-To launch the full desktop application (FastAPI backend + PyWebview UI):
+To launch the full AVNONA desktop application (FastAPI backend + PyWebview UI):
 
 ```powershell
 python main_app.py
@@ -159,7 +161,7 @@ python run_agent.py
 
 ### Example Verification Prompt
 
-Try prompting the agent with a deliberate compiler bug to verify self-healing:
+Try prompting AVNONA with a deliberate compiler bug to verify self-healing:
 
 > *"Write a C++ program in `calc.cpp` that calculates the factorial of 10. Deliberately omit `#include <iostream>`, compile it, catch the error, fix the include, and run it."*
 
@@ -167,7 +169,7 @@ Try prompting the agent with a deliberate compiler bug to verify self-healing:
 
 ## Packaging into Standalone `.exe`
 
-To package KACHOW into an executable for Windows distribution:
+To package AVNONA into an executable for Windows distribution:
 
 1. **Install PyInstaller:**
 ```powershell
@@ -183,7 +185,7 @@ pyinstaller --noconfirm build_app.spec
 ```
 
 
-3. Find the compiled output folder at `dist/KACHOW/` and launch **`KACHOW.exe`**.
+3. Find the compiled output folder at `dist/AVNONA/` and launch **`AVNONA.exe`**.
 
 ---
 
@@ -194,7 +196,5 @@ pyinstaller --noconfirm build_app.spec
 * **Dependencies:** Built using PyTorch, Hugging Face Transformers, PEFT, bitsandbytes, FastAPI, and PyWebview.
 
 ```
-
-
 
 ```
