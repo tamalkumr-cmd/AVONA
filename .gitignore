@@ -1,12 +1,16 @@
-﻿venv/
+﻿# Virtual Environments
 .venv/
+venv/
 __pycache__/
-*.gguf
+
+# Large Model Weights, Checkpoints, & Datasets
 *.safetensors
 *.bin
 *.pt
 *.pth
-smollm2_360m_merged/
-my_finetuned_slm/checkpoint-*/
-llama.cpp/
-.env
+*.gguf
+checkpoint-*/
+agent_adapter/
+my_finetuned_slm/
+data/
+*.txt
